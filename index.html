@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawab ZADA IP ADDRESS TRACKER</title>
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            border: 2px solid #00ff00;
+            padding: 30px;
+            background-color: #1a1a1a;
+            box-shadow: 0 0 20px #00ff00;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        h2 { 
+            text-align: center; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            margin-top: 0;
+        }
+        .dev-tag {
+            text-align: center;
+            color: #ff0055;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px #00ff00;
+            transition: 0.3s;
+        }
+        button:hover { 
+            background-color: #00cc00; 
+            box-shadow: 0 0 15px #00cc00;
+        }
+        .result { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: #000; 
+            border: 1px dashed #00ff00; 
+            display: none; 
+            word-wrap: break-word; 
+        }
+        #map {
+            width: 100%;
+            height: 300px;
+            margin-top: 15px;
+            border: 2px solid #ff0055;
+            display: none;
+            border-radius: 5px;
+        }
+        .footer { 
+            margin-top: 20px; 
+            font-size: 13px; 
+            color: #888; 
+            text-align: center; 
+            letter-spacing: 1px;
+        }
+        a {
+            color: #ff0055;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hacker Style Lock Screen Overlay */
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #111111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 9999;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .lock-title {
+            color: #ff0055;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 8px #ff0055;
+            text-transform: uppercase;
+        }
+        .lock-btn {
+            background-color: #ff0055;
+            color: #fff;
+            box-shadow: 0 0 10px #ff0055;
+            margin-bottom: 10px;
+        }
+        .lock-btn:hover {
+            background-color: #cc0044;
+            box-shadow: 0 0 15px #cc0044;
+        }
+        .status-txt {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Tool Lock System Layer -->
+    <div id="lockSystem" class="lock-overlay">
+        <div class="lock-title">🔒 TOOL LOCKED 🔒</div>
+        <p style="margin-bottom: 25px; line-height: 1.6;">FOLLOW MY WHATSAPP CHANNEL TO UNLOCK THE TOOL</p>
+        <button class="lock-btn" onclick="openChannel()">FOLLOW WHATSAPP CHANNEL</button>
+        <div class="status-txt">[!] waiting Channel Verification...</div>
+    </div>
+
+    <h2>🛡️ Nawab ZADA IP ADDRESS TRACKER 🛡️</h2>
+    <div class="dev-tag">Developer: Nawab ZADA HACKER🙌🦅🔥</div>
+    
+    <input type="text" id="ipInput" placeholder="ENTER TARGET IP ADDRESS...">
+    <button onclick="trackIP()">Scan Target Network</button>
+
+    <div id="resultBox" class="result"></div>
+    <!-- Satellite Map Container -->
+    <div id="map"></div>
+</div>
+
+<div class="footer">Nawab ZADA HACKER 🙌 🦅 &copy; 2026</div>
+
+<!-- Leaflet JS for Map -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    let map;
+    let marker;
+    let clickedUnlock = false;
+
+    // Function to handle link redirection and tracking status
+    function openChannel() {
+        clickedUnlock = true;
+        window.open("https://whatsapp.com/channel/0029VbB47ttDDmFNztpnZf2m", "_blank");
+    }
+
+    // Auto-unlock logic when user returns back to the tab
+    window.addEventListener('focus', function() {
+        if (clickedUnlock) {
+            document.getElementById('lockSystem').style.display = 'none';
+        }
+    });
+
+    async function trackIP() {
+        const ip = document.getElementById('ipInput').value.trim();
+        const resultBox = document.getElementById('resultBox');
+        const mapContainer = document.getElementById('map');
+        
+        if(!ip) {
+            alert("Please enter a valid IP address first!");
+            return;
+        }
+
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "[+] Initializing Cyber Scan... Fetching Geolocation Data...";
+        mapContainer.style.display = "none";
+
+        try {
+            // Using ip-api to fetch complete tracking details
+            const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,regionName,city,zip,lat,lon,timezone,isp,org,as,query`);
+            const data = await response.json();
+
+            if(data.status === "success") {
+                // Displaying target network details
+                resultBox.innerHTML = `
+                    <strong style="color: #ff0055;">[🎯] TARGET DETAILS INJECTED:</strong><br><br>
+                    <strong>⚡ IP Address:</strong> ${data.query}<br>
+                    <strong>🌍 Country:</strong> ${data.country} (${data.countryCode})<br>
+                    <strong>🏙️ Real City:</strong> ${data.city}<br>
+                    <strong>📍 Region/State:</strong> ${data.regionName}<br>
+                    <strong>📮 Postal Code:</strong> ${data.zip || "N/A"}<br>
+                    <strong>🌐 ISP Network:</strong> ${data.isp}<br>
+                    <strong>🏢 Organization:</strong> ${data.org}<br>
+                    <strong>⏰ Timezone:</strong> ${data.timezone}<br>
+                    <strong>🧭 Coordinates:</strong> ${data.lat}, ${data.lon}<br><br>
+                    <a href="https://www.google.com/maps/?q=${data.lat},${data.lon}" target="_blank">[📍] OPEN IN GOOGLE MAPS EXTERNAL</a>
+                `;
+
+                // Display and initialize the Satellite Map
+                mapContainer.style.display = "block";
+                
+                // If map already exists, clear it for the new query
+                if (map) {
+                    map.remove();
+                }
+
+                // Initializing Leaflet Map with Esri Satellite Imagery
+                map = L.map('map').setView([data.lat, data.lon], 13);
+                
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                }).addTo(map);
+
+                // Add a target marker to the map
+                marker = L.marker([data.lat, data.lon]).addTo(map)
+                    .bindPopup(`<b>Target Location</b><br>City: ${data.city}<br>ISP: ${data.isp}`)
+                    .openPopup();
+
+                // Fix map size glitch on hidden element display
+                setTimeout(() => { map.invalidateSize(); }, 200);
+
+            } else {
+                resultBox.innerHTML = "[-] Access Denied: Invalid Target IP or Data Corrupted.";
+            }
+        } catch (error) {
+            resultBox.innerHTML = "[-] Connection Interrupted. Check Network connection.";
+        }
+    }
+</script>
+
+</body>
+</html>
